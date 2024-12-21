@@ -7,10 +7,14 @@ const createUserIntoDB = async (userData: TUser) => {
   const existingUser = await User.isUserExists(userData.email);
 
   if (existingUser) {
-    throw new AppError(StatusCodes.CONFLICT, 'Email is already in useok');
+    throw new AppError(StatusCodes.CONFLICT, 'Email is already in use');
   }
-  const user = await User.create(userData);
-  return user;
+  await User.create(userData);
+  const result = await User.findOne({ email: userData.email }).select(
+    '_id name email',
+  );
+
+  return result;
 };
 
 export const UserServices = {

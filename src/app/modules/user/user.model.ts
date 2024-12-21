@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { TUser, UserModel } from './user.interface';
-import AppError from '../../errors/AppError';
-import { StatusCodes } from 'http-status-codes';
+import config from '../../config';
+import bcrypt from 'bcrypt';
 
 const userSchema = new Schema<TUser>(
   {
@@ -22,25 +22,22 @@ const userSchema = new Schema<TUser>(
     timestamps: true,
   },
 );
-// userSchema.pre('save', async function (next) {
-//   try {
-//     const isUserExists = await User.findOne({ email: this.email });
-//     // console.log(isUserExists);
-//     if (isUserExists) {
-//       return next(
-//         new AppError(StatusCodes.CONFLICT, 'Email is already in use'),
-//       );
-//     }
-//     next();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
 
 userSchema.statics.isUserExists = async function (email: string) {
   const user = await User.findOne({ email });
   // console.log(user);
   return user;
 };
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+
+  user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt));
+  next();
+});
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
 
 export const User = model<TUser, UserModel>('User', userSchema);
