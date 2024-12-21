@@ -39,5 +39,11 @@ userSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
 });
+userSchema.statics.isPasswordMatch = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
 
 export const User = model<TUser, UserModel>('User', userSchema);
