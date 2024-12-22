@@ -32,6 +32,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(StatusCodes.UNAUTHORIZED, 'Invalid token');
     }
     const { role, email } = decoded;
+    console.log(role);
 
     const existingUser = await User.findOne({ email: email });
     if (!existingUser) {

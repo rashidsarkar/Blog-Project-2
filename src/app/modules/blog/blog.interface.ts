@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-type TBlog = {
+export type TBlog = {
   title: string;
   content: string;
   author: Types.ObjectId;
