@@ -23,8 +23,19 @@ const loginUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getUsers = catchAsync(async (req, res) => {
+  console.log('test', req.tokenUser);
+  const result = await UserServices.getUserFromDb();
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'User found',
+    data: result,
+  });
+});
 
 export const UserControllers = {
   createUser,
   loginUser,
+  getUsers,
 };

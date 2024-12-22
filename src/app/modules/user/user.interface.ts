@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { Model } from 'mongoose';
-
+import { USER_ROLE } from './user.const';
+export type TUserRole = keyof typeof USER_ROLE;
 export type TUser = {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'user';
+  role: TUserRole;
   isBlocked: boolean;
 };
 export type TLoginUser = {
