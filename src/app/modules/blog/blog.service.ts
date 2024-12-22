@@ -20,6 +20,12 @@ const createBlogIntoDb = async (payload: TBlog, authorMail: string) => {
     .select('id title content author');
   return blogWithAuthor;
 };
+
+const updateBlogIntoDb = async (id, updateData, requestEmail) => {
+  console.log(id, updateData, requestEmail);
+  // have to work on this tomorow
+};
 export const BlogServices = {
   createBlogIntoDb,
+  updateBlogIntoDb,
 };
