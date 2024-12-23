@@ -46,8 +46,8 @@ const deleteBlog = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllBlog = catchAsync(async (req: Request, res: Response) => {
- 
-  const result = await BlogServices.;
+  const query = req.query;
+  const result = await BlogServices.getAllBlogFromDb(query);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -61,4 +61,5 @@ export const BlogControllers = {
   createBlog,
   updateBlog,
   deleteBlog,
+  getAllBlog,
 };

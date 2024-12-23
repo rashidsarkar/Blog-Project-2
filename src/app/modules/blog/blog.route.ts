@@ -24,6 +24,6 @@ router.delete(
   auth(USER_ROLE.user, USER_ROLE.admin),
   BlogControllers.deleteBlog,
 );
-router.get('/',BlogControllers.)
+router.get('/', BlogControllers.getAllBlog);
 
 export const BlogRoutes = router;

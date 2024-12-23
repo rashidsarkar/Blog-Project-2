@@ -6,6 +6,7 @@ import { Blog } from './blog.model';
 import { TUser } from '../user/user.interface';
 import { USER_ROLE } from '../user/user.const';
 import { JwtPayload } from 'jsonwebtoken';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createBlogIntoDb = async (payload: TBlog, authorMail: string) => {
   const author = await User.findOne({ email: authorMail });
@@ -77,9 +78,26 @@ const deleteBlogFromDb = async (id: string, requester: JwtPayload) => {
 
   return deleteBlog;
 };
+const getAllBlogFromDb = async (query: Record<string, unknown>) => {
+  const searchAbleFields = ['title', 'content'];
+
+  const blogAfterFilter = new QueryBuilder(
+    Blog.find().populate('author', 'name email'),
+    query,
+  )
+    .search(searchAbleFields)
+    .filter()
+    .sort();
+
+  const result = await blogAfterFilter.modelQuery.select(
+    '_id title content author',
+  );
+  return result;
+};
 
 export const BlogServices = {
   createBlogIntoDb,
   updateBlogIntoDb,
   deleteBlogFromDb,
+  getAllBlogFromDb,
 };
