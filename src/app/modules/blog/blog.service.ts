@@ -4,6 +4,8 @@ import { User } from '../user/user.model';
 import { TBlog } from './blog.interface';
 import { Blog } from './blog.model';
 import { TUser } from '../user/user.interface';
+import { USER_ROLE } from '../user/user.const';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createBlogIntoDb = async (payload: TBlog, authorMail: string) => {
   const author = await User.findOne({ email: authorMail });
@@ -50,7 +52,34 @@ const updateBlogIntoDb = async (
   return updatedBlog;
 };
 
+const deleteBlogFromDb = async (id: string, requester: JwtPayload) => {
+  const blog = await Blog.findById(id).populate<{ author: Partial<TUser> }>(
+    'author',
+    'name email role',
+  );
+  let deleteBlogFromAdmin;
+  if (!blog) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Blog not found');
+  }
+
+  if (requester.role === USER_ROLE.admin) {
+    deleteBlogFromAdmin = await Blog.findByIdAndDelete(id);
+    return deleteBlogFromAdmin;
+  }
+
+  if (requester.email !== blog.author.email) {
+    throw new AppError(
+      StatusCodes.FORBIDDEN,
+      'You are not authorized to Delete this blog',
+    );
+  }
+  const deleteBlog = await Blog.findByIdAndDelete(id);
+
+  return deleteBlog;
+};
+
 export const BlogServices = {
   createBlogIntoDb,
   updateBlogIntoDb,
+  deleteBlogFromDb,
 };
