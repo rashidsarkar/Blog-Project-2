@@ -3,6 +3,8 @@ import { User } from '../user/user.model';
 import { USER_ROLE } from '../user/user.const';
 import AppError from '../../errors/AppError';
 import { StatusCodes } from 'http-status-codes';
+import { Blog } from '../blog/blog.model';
+import { TUser } from '../user/user.interface';
 
 const blockUSerFromDb = async (id: string, requester: JwtPayload) => {
   //   console.log(requester);
@@ -24,6 +26,23 @@ const blockUSerFromDb = async (id: string, requester: JwtPayload) => {
   return blockUser;
 };
 
+const deleteBlogFromDbByAdmin = async (id: string, requester: JwtPayload) => {
+  const blog = await Blog.findById(id).populate<{ author: Partial<TUser> }>(
+    'author',
+    'name email role',
+  );
+  let deleteBlogFromAdmin;
+  if (!blog) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Blog not found');
+  }
+
+  if (requester.role === USER_ROLE.admin) {
+    deleteBlogFromAdmin = await Blog.findByIdAndDelete(id);
+    return deleteBlogFromAdmin;
+  }
+};
+
 export const AdminServices = {
   blockUSerFromDb,
+  deleteBlogFromDbByAdmin,
 };
