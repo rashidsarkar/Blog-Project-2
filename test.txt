@@ -31,6 +31,7 @@ const getAllBlogFromDb = async (query: Record<string, unknown>) => {
   //   const sortOrder = query?.sortOrder;
   //   sortStr = `${sortOrder === 'asc' ? '-' : ''}${sortBy}`;
   // }
+  project deploy
 
   // const result = await authorIDFilter.sort(sortStr);
 
