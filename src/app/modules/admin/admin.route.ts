@@ -12,7 +12,7 @@ router.patch(
 );
 router.delete(
   '/blogs/:id',
-  auth(USER_ROLE.user),
+  auth(USER_ROLE.admin),
   AdminControllers.deleteBlogByAdmin,
 );
 // router.delete('/:id', auth(USER_ROLE.user), BlogControllers.deleteBlog);
