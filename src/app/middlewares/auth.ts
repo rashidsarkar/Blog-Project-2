@@ -27,7 +27,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       token,
       config.jwt_access_secret as string,
     ) as JwtPayload;
-
+    // console.log(decoded);
     if (!decoded) {
       throw new AppError(StatusCodes.UNAUTHORIZED, 'Invalid token');
     }
@@ -41,6 +41,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     if (isBlocked) {
       throw new AppError(StatusCodes.FORBIDDEN, 'User is Blocked');
     }
+    // console.log(requiredRoles);
 
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(
@@ -48,6 +49,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
         'You do not have permission to access this resource',
       );
     }
+
     req.tokenUser = decoded as JwtPayload;
     next();
   });
