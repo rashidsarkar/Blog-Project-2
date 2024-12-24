@@ -18,7 +18,7 @@ app.use('/api', router);
 //Not Found
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World! From Blog');
+  res.send('Hello World! From Blog with build');
 });
 app.use(globalErrorHandler);
 
