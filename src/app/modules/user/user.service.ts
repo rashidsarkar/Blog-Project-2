@@ -44,7 +44,7 @@ const loginUser = async (userData: TLoginUser) => {
     expiresIn: '10d',
   });
   return {
-    accessToken,
+    token: accessToken,
   };
 };
 const getUserFromDb = async () => {
